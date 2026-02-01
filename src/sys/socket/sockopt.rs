@@ -412,6 +412,16 @@ sockopt_impl!(
 #[cfg(feature = "net")]
 sockopt_impl!(
     #[cfg_attr(docsrs, doc(cfg(feature = "net")))]
+    /// Join a multicast group
+    IpAddMembershipN,
+    SetOnly,
+    libc::IPPROTO_IP,
+    libc::IP_ADD_MEMBERSHIP,
+    super::IpMembershipRequestN
+);
+#[cfg(feature = "net")]
+sockopt_impl!(
+    #[cfg_attr(docsrs, doc(cfg(feature = "net")))]
     /// Leave a multicast group.
     IpDropMembership,
     SetOnly,

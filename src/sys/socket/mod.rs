@@ -624,6 +624,36 @@ impl IpMembershipRequest {
     }
 }
 
+/// Request for multicast socket operations
+///
+/// This is a wrapper type around `ip_mreq`.
+#[repr(transparent)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct IpMembershipRequestN(libc::ip_mreqn);
+
+impl IpMembershipRequestN {
+    /// Instantiate a new `IpMembershipRequestN`
+    ///
+    /// If `interface` is `None`, then `Ipv4Addr::any()` will be used for the interface.
+    pub fn new(group: net::Ipv4Addr, interface: Option<net::Ipv4Addr>, ifindex: Option<i32>)
+        -> Self
+    {
+        let imr_addr = match interface {
+            None => net::Ipv4Addr::UNSPECIFIED,
+            Some(addr) => addr
+        };
+        let ifindex = match ifindex {
+            None => 0,
+            Some(ifindex) => ifindex
+        };
+        IpMembershipRequestN(libc::ip_mreqn {
+            imr_multiaddr: ipv4addr_to_libc(group),
+            imr_address: ipv4addr_to_libc(imr_addr),
+            imr_ifindex: ifindex as libc::c_int,
+        })
+    }
+}
+
 /// Request for ipv6 multicast socket operations
 ///
 /// This is a wrapper type around `ipv6_mreq`.
