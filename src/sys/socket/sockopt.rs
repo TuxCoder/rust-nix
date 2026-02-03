@@ -456,6 +456,14 @@ cfg_if! {
             libc::IPV6_LEAVE_GROUP, super::Ipv6MembershipRequest);
     }
 }
+sockopt_impl!(
+    /// Join an L2 multicast group.
+    PacketAddMembership,
+    SetOnly,
+    libc::SOL_PACKET,
+    libc::PACKET_ADD_MEMBERSHIP,
+    libc::packet_mreq
+);
 #[cfg(feature = "net")]
 sockopt_impl!(
     #[cfg_attr(docsrs, doc(cfg(feature = "net")))]
@@ -481,12 +489,32 @@ sockopt_impl!(
 #[cfg(feature = "net")]
 sockopt_impl!(
     #[cfg_attr(docsrs, doc(cfg(feature = "net")))]
+    /// Set the device for outgoing multicast packets on the socket.
+    Ipv6MulticastIf,
+    Both,
+    libc::IPPROTO_IPV6,
+    libc::IPV6_MULTICAST_IF,
+    libc::c_uint
+);
+#[cfg(feature = "net")]
+sockopt_impl!(
+    #[cfg_attr(docsrs, doc(cfg(feature = "net")))]
     /// Set or read a boolean integer argument that determines whether sent
     /// multicast packets should be looped back to the local sockets.
     IpMulticastLoop,
     Both,
     libc::IPPROTO_IP,
     libc::IP_MULTICAST_LOOP,
+    bool
+);
+#[cfg(feature = "net")]
+sockopt_impl!(
+    #[cfg_attr(docsrs, doc(cfg(feature = "net")))]
+    /// TODO
+    Ipv6MulticastLoop,
+    Both,
+    libc::IPPROTO_IPV6,
+    libc::IPV6_MULTICAST_LOOP,
     bool
 );
 #[cfg(target_os = "linux")]
@@ -2020,3 +2048,5 @@ impl<T: AsMut<[u8]>> Get<CString> for GetCString<T> {
             .to_owned()
     }
 }
+
+

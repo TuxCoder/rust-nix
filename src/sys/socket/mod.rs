@@ -669,6 +669,13 @@ impl Ipv6MembershipRequest {
             ipv6mr_interface: 0,
         })
     }
+
+    pub const fn new_with_interface(group: net::Ipv6Addr, interface: u32 ) -> Self {
+        Ipv6MembershipRequest(libc::ipv6_mreq {
+            ipv6mr_multiaddr: ipv6addr_to_libc(&group),
+            ipv6mr_interface: interface as libc::c_uint,
+        })
+    }
 }
 }
 
