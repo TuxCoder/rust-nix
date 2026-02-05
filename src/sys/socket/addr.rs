@@ -1457,6 +1457,18 @@ impl From<net::SocketAddr> for SockaddrStorage {
     }
 }
 
+
+#[cfg(feature = "net")]
+impl From<datalink::LinkAddr> for SockaddrStorage {
+    fn from(s: datalink::LinkAddr) -> Self {
+        unsafe {
+            let mut ss: Self = mem::zeroed();
+            ss.dl = s;
+            ss
+        }
+    }
+}
+
 impl Hash for SockaddrStorage {
     fn hash<H: Hasher>(&self, s: &mut H) {
         unsafe {
